@@ -1,0 +1,11 @@
+.idea
+.vscode
+old/
+dump_*.txt
+*.tar.gz
+switch-ssh
+test
+switches.txt
+detected_models.txt
+release.sh
+TODO.md

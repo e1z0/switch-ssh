@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Cisco SBOS",
+    "description": "Cisco Small Business Operating System",
+    "models": ["SG\\d{2,3}", "SF\\d{2,3}","Active-image:","cbs_ros","Boot version"],
+    "versions": [
+      "3\\.0\\..*",
+      "3\\.1\\..*",
+      "1\\.3\\.5\\.\\d{2}",
+      "1\\.4\\.0\\.\\d{2}",
+      "Version: 2\\.5\\.\\d{1}\\.\\d{1,2}",
+      "Version: 3\\.3\\.\\d{1}\\.\\d{1,2}",
+      "1\\.4\\.8\\.6",
+      "1\\.4\\.11\\.5"
+    ]
+  },
+  {
+    "name": "Cisco IOS",
+    "description": "Cisco Internetwork Operating System",
+    "models": ["ISR\\d{4}", "C\\d{4}", "Catalyst \\d{4,5}"],
+    "versions": [
+      "15\\.\\d+\\(\\d+[a-z]?\\)[A-Z]{2}\\d+",
+      "12\\.\\d+\\(\\d+[a-z]?\\)[A-Z]*\\d*"
+    ]
+  },
+  {
+    "name": "Cisco IOS XE",
+    "description": "Cisco IOS XE Software",
+    "models": ["ASR\\d{4}", "CSR\\d{4}", "Catalyst 9\\d{4}"],
+    "versions": ["16\\.\\d{1,2}\\..*", "17\\.\\d{1,2}\\..*"]
+  },
+  {
+    "name": "Cisco NX-OS",
+    "description": "Cisco Nexus Operating System",
+    "models": ["Nexus \\d{4,5}"],
+    "versions": ["7\\.\\d{1,2}\\..*", "9\\.\\d{1,2}\\..*"]
+  },
+  {
+    "name": "ArubaOS",
+    "description": "Aruba Operating System for Mobility Controllers",
+    "models": [
+      "Aruba Operating System"
+    ],
+    "versions": [
+      "^6\\.5\\..*",
+      "^8\\.\\d{1,2}\\..*",
+      "ArubaOS \\(MODEL: \\d{3,4}\\), Version \\d+\\.\\d+\\.\\d+\\.\\d+ [A-Z]+"
+    ]
+  },
+  {
+    "name": "Aruba CX",
+    "description": "Aruba CX Switch Operating System",
+    "models": [
+      "83\\d{2}", "84\\d{2}",
+      "R9W96A",
+      "R8Q68A",
+      "JL\\d{1,3}[A-B]"
+    ],
+    "versions": [
+      "ArubaOS-CX \\d+\\.\\d+\\.\\d+\\.\\d+",
+      "(LL|PL|ML)\\.10\\.\\d{1,2}\\..*"
+    ]
+  },
+  {
+    "name": "FortiOS",
+    "description": "Fortinet FortiGate Operating System",
+    "models": ["FG-\\d{2,4}", "FGT-\\d{2,4}"],
+    "versions": ["6\\.\\d{1,2}\\..*", "7\\.\\d{1,2}\\..*"]
+  }
+]
