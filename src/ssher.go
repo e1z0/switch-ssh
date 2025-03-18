@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+        "errors"
 )
 
 type OS struct {
@@ -15,6 +16,7 @@ type OS struct {
 	Description string   `json:"description"`
 	Models      []string `json:"models"`
 	Versions    []string `json:"versions"`
+        MacAddrComm string   `json:"mac-addr-list"`
 }
 
 var IsLogDebug = true
@@ -33,6 +35,15 @@ func loadOSData() error {
 	}
 
 	return nil
+}
+
+func ReturnOsInfo(input string) (OS,error) {
+   for _, osEntry := range osData {
+       if osEntry.Name == input {
+          return osEntry,nil
+       }
+   }
+   return OS{},errors.New("no os of that name found")
 }
 
 // finds OS by model or version
@@ -122,7 +133,7 @@ func AppendFile(filename string, text string) error {
 }
 
 func main() {
-	mode := flag.String("mode", "detect", "The mode to run the application (e.g., detect, run, testmodel")
+	mode := flag.String("mode", "detect", "The mode to run the application (e.g., detect, run, testmodel, mac")
 	host := flag.String("host", "", "Hostname to connect to")
 	port := flag.Int("port", 22, "A ssh port number")
 	user := flag.String("user", "", "Username")
@@ -163,6 +174,70 @@ func main() {
 		}
 	}
 
+// mass get mac address list
+        if *mode == "mac" && *mass {
+                err := loadOSData()
+                if err != nil {
+                        fmt.Printf("Error loading OS data: %v\n", err)
+                        return
+                }
+                inFile, err := os.Open("switches.txt")
+                if err != nil {
+                        fmt.Printf("error: %s\n", err)
+                        os.Exit(1)
+                }
+                defer inFile.Close()
+                devices := []string{}
+                failed_devices := []string{}
+                scanner := bufio.NewScanner(inFile)
+                for scanner.Scan() {
+                        line := scanner.Text()
+                        res := strings.Split(line, " ")
+                        if res[0] != "" || res[1] != "" || res[2] != "" {
+                                h := res[0]
+                                u := res[1]
+                                p := res[2]
+                                ipPort := fmt.Sprintf("%s:%d", h, *port)
+                                fmt.Printf("Processing host: %s\n", ipPort)
+                                brand, err := GetSSHBrand(u, p, ipPort)
+                                if err != nil {
+                                        fmt.Printf("GetSSHBrand err: %s\n", err)
+                                        failed_devices = append(failed_devices, fmt.Sprintf("Failed detect brand on %s\n",h))
+                                        continue
+                                }
+                                if brand == "" {
+                                        failed_devices = append(failed_devices, fmt.Sprintf("Detected brand string is empty on %s\n",h))
+                                        fmt.Printf("unknown model for host: %s\n", h)
+                                        continue
+                                } else {
+                                        fmt.Printf("Device: %s OS is: %s\n",h, brand)
+                                        OS, err := ReturnOsInfo(brand)
+                                        if err != nil {
+                                             failed_devices = append(failed_devices, fmt.Sprintf("Cannot return os command for view mac addresses on %s\n",h))
+                                             continue
+                                        }
+                                        result, err := RunCommands(*user, *pass, ipPort, OS.MacAddrComm)
+                                        if err != nil {
+                                             failed_devices = append(failed_devices, fmt.Sprintf("Cannot run command %s on %s\n",OS.MacAddrComm,h))
+                                             continue
+                                        }
+                                        err = SaveFile(fmt.Sprintf("macs/%s-%s.txt",h,OS.Name),result)
+                                        if err != nil {
+                                             failed_devices = append(failed_devices, fmt.Sprintf("Unable save output file for command on %s\n",h))
+                                        }
+                             }
+                        } else {
+                                fmt.Printf("Corrupt line: %s\n", line)
+                        }
+                }
+                // write about the problems in the file
+                content := strings.Join(devices, "\n")
+                SaveFile("fail.log", content)
+
+        }
+
+
+// mass detect
 	if *mode == "detect" && *mass {
 		err := loadOSData()
 		if err != nil {
@@ -207,6 +282,37 @@ func main() {
 		SaveFile("detected_models.txt", content)
 
 	}
+
+        if *mode == "mac" && *user != "" && *pass != "" {
+                err := loadOSData()
+                if err != nil {
+                        fmt.Printf("Error loading OS data: %v\n", err)
+                        return
+                }
+                ipPort := fmt.Sprintf("%s:%d", *host, *port)
+                brand, err := GetSSHBrand(*user, *pass, ipPort)
+                if err != nil {
+                        fmt.Printf("GetSSHBrand err: %s\n", err.Error())
+                        os.Exit(1)
+                }
+                if brand == "" {
+                        fmt.Printf("unknown model for host: %s\n", *host)
+                } else {
+                        fmt.Printf("Device OS is: %s\n", brand)
+                        OS, err := ReturnOsInfo(brand)
+                             if err != nil {
+                             fmt.Printf("error: %s\n",err)
+                        }
+                        result, err := RunCommands(*user, *pass, ipPort, OS.MacAddrComm)
+                        if err != nil {
+                             fmt.Println("Error: %s\n", err.Error())
+                             os.Exit(1)
+                        }
+                        fmt.Printf("%\n",result)
+
+                }
+                os.Exit(0)
+        }
 
 	if *mode == "detect" && *user != "" && *pass != "" {
 		err := loadOSData()
