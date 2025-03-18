@@ -216,7 +216,7 @@ func main() {
                                              failed_devices = append(failed_devices, fmt.Sprintf("Cannot return os command for view mac addresses on %s\n",h))
                                              continue
                                         }
-                                        result, err := RunCommands(*user, *pass, ipPort, OS.MacAddrComm)
+                                        result, err := RunCommands(u, p, ipPort, OS.MacAddrComm)
                                         if err != nil {
                                              failed_devices = append(failed_devices, fmt.Sprintf("Cannot run command %s on %s\n",OS.MacAddrComm,h))
                                              continue
