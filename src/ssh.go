@@ -46,7 +46,7 @@ const (
  * @return         Execution output and execution errors
  * @author shenbowei
  */
-func RunCommands(user, password, ipPort string, cmds ...string) (string, error) {
+func RunCommands(user, password, ipPort string, pager string, cmds ...string) (string, error) {
 	sessionKey := user + "_" + password + "_" + ipPort
 	sessionManager.LockSession(sessionKey)
 	defer sessionManager.UnlockSession(sessionKey)
@@ -56,6 +56,7 @@ func RunCommands(user, password, ipPort string, cmds ...string) (string, error) 
 		LogError("GetSession error:%s", err)
 		return "", err
 	}
+        sshSession.WriteChannel(pager)
 	sshSession.WriteChannel(cmds...)
 	result := sshSession.ReadChannelTiming(2 * time.Second)
 	filteredResult := filterResult(result, cmds[0])

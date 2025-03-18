@@ -16,6 +16,7 @@ type OS struct {
 	Description string   `json:"description"`
 	Models      []string `json:"models"`
 	Versions    []string `json:"versions"`
+        Pager       string   `json:"pager"`
         MacAddrComm string   `json:"mac-addr-list"`
 }
 
@@ -211,17 +212,17 @@ func main() {
                                         continue
                                 } else {
                                         fmt.Printf("Device: %s OS is: %s\n",h, brand)
-                                        OS, err := ReturnOsInfo(brand)
+                                        os, err := ReturnOsInfo(brand)
                                         if err != nil {
                                              failed_devices = append(failed_devices, fmt.Sprintf("Cannot return os command for view mac addresses on %s\n",h))
                                              continue
                                         }
-                                        result, err := RunCommands(u, p, ipPort, OS.MacAddrComm)
+                                        result, err := RunCommands(u, p, ipPort, os.Pager, os.MacAddrComm)
                                         if err != nil {
-                                             failed_devices = append(failed_devices, fmt.Sprintf("Cannot run command %s on %s\n",OS.MacAddrComm,h))
+                                             failed_devices = append(failed_devices, fmt.Sprintf("Cannot run command %s on %s\n",os.MacAddrComm,h))
                                              continue
                                         }
-                                        err = SaveFile(fmt.Sprintf("macs/%s-%s.txt",h,OS.Name),result)
+                                        err = SaveFile(fmt.Sprintf("macs/%s-%s.txt",h,os.Name),result)
                                         if err != nil {
                                              failed_devices = append(failed_devices, fmt.Sprintf("Unable save output file for command on %s\n",h))
                                         }

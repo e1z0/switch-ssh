@@ -4,6 +4,7 @@
     "description": "Cisco Small Business Operating System",
     "models": ["SG\\d{2,3}", "SF\\d{2,3}","Active-image:","cbs_ros","Boot version"],
     "mac-addr-list": "show mac address-table",
+    "pager": "terminal datadump",
     "versions": [
       "3\\.0\\..*",
       "3\\.1\\..*",
@@ -20,6 +21,7 @@
     "description": "Cisco Internetwork Operating System",
     "models": ["ISR\\d{4}", "C\\d{4}", "Catalyst \\d{4,5}"],
     "mac-addr-list": "",
+    "pager": "",
     "versions": [
       "15\\.\\d+\\(\\d+[a-z]?\\)[A-Z]{2}\\d+",
       "12\\.\\d+\\(\\d+[a-z]?\\)[A-Z]*\\d*"
@@ -30,6 +32,7 @@
     "description": "Cisco IOS XE Software",
     "models": ["ASR\\d{4}", "CSR\\d{4}", "Catalyst 9\\d{4}"],
     "mac-addr-list": "",
+    "pager": "",
     "versions": ["16\\.\\d{1,2}\\..*", "17\\.\\d{1,2}\\..*"]
   },
   {
@@ -37,6 +40,7 @@
     "description": "Cisco Nexus Operating System",
     "models": ["Nexus \\d{4,5}"],
     "mac-addr-list": "",
+    "pager": "",
     "versions": ["7\\.\\d{1,2}\\..*", "9\\.\\d{1,2}\\..*"]
   },
   {
@@ -46,6 +50,7 @@
       "Aruba Operating System"
     ],
     "mac-addr-list": "",
+    "pager": "",
     "versions": [
       "^6\\.5\\..*",
       "^8\\.\\d{1,2}\\..*",
@@ -62,6 +67,7 @@
       "JL\\d{1,3}[A-B]"
     ],
     "mac-addr-list": "show mac-address",
+    "pager": "no page",
     "versions": [
       "ArubaOS-CX \\d+\\.\\d+\\.\\d+\\.\\d+",
       "(LL|PL|ML)\\.10\\.\\d{1,2}\\..*"
@@ -72,6 +78,7 @@
     "description": "Fortinet FortiGate Operating System",
     "models": ["FG-\\d{2,4}", "FGT-\\d{2,4}"],
     "mac-addr-list": "",
+    "pager": "",
     "versions": ["6\\.\\d{1,2}\\..*", "7\\.\\d{1,2}\\..*"]
   }
 ]
